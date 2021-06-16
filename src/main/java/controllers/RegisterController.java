@@ -49,13 +49,8 @@ public class RegisterController extends BaseController {
             return;
         }
 
-        try {
-            if (!SQLiteDatabase.insertUser(usernameField.getText(), Password.hash(passwordField.getText()), emailField.getText())) {
-                showError("Error: Failed to register");
-                return;
-            }
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+        if (!SQLiteDatabase.insertUser(usernameField.getText(), passwordField.getText(), emailField.getText())) {
+            showError("Error: Failed to register");
             return;
         }
 

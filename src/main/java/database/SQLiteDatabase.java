@@ -71,8 +71,8 @@ public class SQLiteDatabase {
             return true;
         } catch (SQLException e) {
             printSQLException(e);
-            return false;
         }
+        return false;
     }
 
     public static boolean validate(String username, String password) {
@@ -159,7 +159,12 @@ public class SQLiteDatabase {
         try (Connection connection = connect()) {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_QUERY);
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
+            try {
+                preparedStatement.setString(2, Password.hash(password));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                e.printStackTrace();
+                return false;
+            }
             preparedStatement.setString(3, email);
             preparedStatement.executeUpdate();
             connection.close();
